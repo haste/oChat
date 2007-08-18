@@ -1,0 +1,7 @@
+## Interface: 20100
+## Title: oChat
+## Author: Haste
+## X-eMail: troeks@gmail.com
+## Notes: Straight forward chat add-on
+
+chat.lua
