@@ -61,7 +61,7 @@ end
 
 local scroll = function(self, dir)
 	if(dir > 0) then
-		if(IsShiftKeyDown) then
+		if(IsShiftKeyDown()) then
 			self:ScrollToTop()
 		else
 			self:ScrollUp()
