@@ -1,4 +1,4 @@
-## Interface: 20100
+## Interface: 20300
 ## Title: oChat
 ## Author: Haste
 ## X-eMail: troeks@gmail.com
