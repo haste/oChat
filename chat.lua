@@ -53,7 +53,7 @@ local AddMessage = function(self, text,...)
 	text = text:gsub("%[Battleground%].+(|Hplayer.+)", "b %1")
 	text = text:gsub("%[Battleground Leader%].+(|Hplayer.+)", "B %1")
 	text = text:gsub("%[(%d+)%. .+%].+(|Hplayer.+)", "%1 %2")
-	text = text:gsub("|Hplayer:(.-)|h%[(.-)%]|h", "|HPlayer:%1|h%2|h")
+	text = text:gsub("|Hplayer:(.-)|h%[(.-)%]|h", "|Hplayer:%1|h%2|h")
 
 	text = ts:format(date"%H%M.%S", text)
 
