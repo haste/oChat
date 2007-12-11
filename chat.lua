@@ -43,18 +43,27 @@ local blacklist = {
 	[ChatFrame4] = true,
 }
 
-local AddMessage = function(self, text,...)
-	text = tostring(text):gsub("%[Guild%].+(|Hplayer.+)", "g %1")
-	text = text:gsub("%[Party%].+(|Hplayer.+)", "p %1")
-	text = text:gsub("%[Raid%].+(|Hplayer.+)", "r %1")
-	text = text:gsub("%[Raid Leader%].+(|Hplayer.+)", "R %1")
-	text = text:gsub("%[Raid Warning%].+(|Hplayer.+)", "rw %1")
-	text = text:gsub("%[Officer%].+(|Hplayer.+)", "o %1")
-	text = text:gsub("%[Battleground%].+(|Hplayer.+)", "b %1")
-	text = text:gsub("%[Battleground Leader%].+(|Hplayer.+)", "B %1")
-	text = text:gsub("%[(%d+)%. .+%].+(|Hplayer.+)", "%1 %2")
-	text = text:gsub("|Hplayer:([^:]+):(%d+)|h%[(.-)%]|h", "|Hplayer:%1:%2|h%3|h")
+_G.CHAT_GUILD_GET = "g %s:\32"
+_G.CHAT_RAID_GET = "r %s:\32"
+_G.CHAT_PARTY_GET = "p %s:\32"
+_G.CHAT_RAID_WARNING_GET = "w %s:\32"
+_G.CHAT_RAID_LEADER_GET = "R %s:\32"
+_G.CHAT_OFFICER_GET = "o %s:\32"
+_G.CHAT_BATTLEGROUND_GET = "b %s:\32"
+_G.CHAT_BATTLEGROUND_LEADER_GET = "B %s:\32"
 
+-- 1: index, 2: channelname, 3: twatt
+-- Examples are based on this: [1. Channel] Otravi: Hi
+local str = "%d %3$s" -- gives: 1 Otravi: Hi
+--local str = "[%2$.3s] %s" -- gives: [Cha] Otravi: Hi
+--local str = "[%d. %2$.3s] %s" -- gives: [1. Cha] Otravi: Hi
+local channel = function(...)
+	return str:format(...)
+end
+
+local AddMessage = function(self, text,...)
+	text = tostring(text):gsub("|Hplayer:([^:]+):(%d+)|h%[(.-)%]|h", "|Hplayer:%1:%2|h%3|h")
+	text = text:gsub("%[(%d+)%. (.+)%].+(|Hplayer.+)", channel)
 	text = ts:format(date"%H%M.%S", text)
 
 	return _AddMessage(self, text, ...)
