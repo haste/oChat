@@ -32,7 +32,7 @@
 --[[ This was once a really old version of idChat :D ]]
 
 local _G = getfenv(0)
-local tostring = tostring
+local type = type
 local _AddMessage = ChatFrame1.AddMessage
 local buttons = {"UpButton", "DownButton", "BottomButton"}
 local dummy = function() end
@@ -62,9 +62,11 @@ local channel = function(...)
 end
 
 local AddMessage = function(self, text,...)
-	text = tostring(text):gsub("|Hplayer:([^:]+):(%d+)|h%[(.-)%]|h", "|Hplayer:%1:%2|h%3|h")
-	text = text:gsub("%[(%d+)%. (.+)%].+(|Hplayer.+)", channel)
-	text = ts:format(date"%H%M.%S", text)
+	if(type(text) == "string") then
+		text = text:gsub("|Hplayer:([^:]+):(%d+)|h%[(.-)%]|h", "|Hplayer:%1:%2|h%3|h")
+		text = text:gsub("%[(%d+)%. (.+)%].+(|Hplayer.+)", channel)
+		text = ts:format(date"%H%M.%S", text)
+	end
 
 	return _AddMessage(self, text, ...)
 end
