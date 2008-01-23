@@ -33,10 +33,16 @@
 
 local _G = getfenv(0)
 local type = type
+local tonumber = tonumber
+local string_split = string.split
+
 local _AddMessage = ChatFrame1.AddMessage
+local _SetItemRef = SetItemRef
+
 local buttons = {"UpButton", "DownButton", "BottomButton"}
 local dummy = function() end
-local ts = "|cffffffff%s|||r %s"
+local ts = "|cffffffff|HoChat:%d:%d|h%s|h|||r %s"
+local buffer, bcount = {}, {}
 
 local blacklist = {
 	[ChatFrame2] = true,
@@ -61,11 +67,19 @@ local channel = function(...)
 	return str:format(...)
 end
 
-local AddMessage = function(self, text,...)
+local AddMessage = function(self, text, ...)
 	if(type(text) == "string") then
+		local mid = bcount[self] + 1
+		local cid = self:GetID()
 		text = text:gsub("|Hplayer:([^:]+):(%d+)|h%[(.-)%]|h", "|Hplayer:%1:%2|h%3|h")
 		text = text:gsub("%[(%d+)%. (.+)%].+(|Hplayer.+)", channel)
-		text = ts:format(date"%H%M.%S", text)
+
+		-- 128 is the default max lines on the chat frames.
+		text = ts:format(cid, mid % 128, date"%H%M.%S", text)
+
+		-- TODO: Clean up this one:
+		buffer[cid * 1e3 + mid % 128] = text:gsub("|Hplayer:(.-):%d+|h.-|h", "%1")
+		bcount[self] = mid
 	end
 
 	return _AddMessage(self, text, ...)
@@ -101,9 +115,12 @@ for i=1, NUM_CHAT_WINDOWS do
 	end
 
 	if(not blacklist[cf]) then
+		bcount[cf] = 0
 		cf.AddMessage = AddMessage
 	end
 end
+
+buttons = nil
 
 ChatFrameMenuButton:Hide()
 ChatFrameMenuButton.Show = dummy
@@ -127,3 +144,17 @@ ChatTypeInfo['RAID_WARNING'].sticky = 1
 ChatTypeInfo['BATTLEGROUND'].sticky = 1
 ChatTypeInfo['WHISPER'].sticky = 1
 ChatTypeInfo['CHANNEL'].sticky = 1
+
+SetItemRef = function(link, text, button, ...)
+	if(link:sub(1, 5) ~= "oChat") then return _SetItemRef(link, text, button, ...) end
+
+	local c, m = string_split(":", link:sub(7))
+	text = buffer[c * 1e3 + m % 128]
+	if(text) then
+		eb:SetText(text)
+		eb:Show()
+		eb:SetFocus()
+	end
+end
+
+
