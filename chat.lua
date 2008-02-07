@@ -173,10 +173,8 @@ SetItemRef = function(link, text, button, ...)
 	if(link:sub(1, 5) ~= "oChat") then return _SetItemRef(link, text, button, ...) end
 
 	local text = borderManipulation(SELECTED_CHAT_FRAME:GetRegions())
-
 	if(text) then
 		text = text:gsub("|c%x*(.-)|r", "%1")
-		text = text:gsub("|HoChat|h(.-)|h", "%1")
 		text = text:gsub("|H.-|h(.-)|h", "%1")
 
 		eb:Insert(text)
