@@ -174,7 +174,7 @@ SetItemRef = function(link, text, button, ...)
 
 	local text = borderManipulation(SELECTED_CHAT_FRAME:GetRegions())
 	if(text) then
-		text = text:gsub("|c%x*(.-)|r", "%1")
+		text = text:gsub("|c%x%x%x%x%x%x%x%x(.-)|r", "%1")
 		text = text:gsub("|H.-|h(.-)|h", "%1")
 
 		eb:Insert(text)
