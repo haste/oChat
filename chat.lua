@@ -41,8 +41,7 @@ local _SetItemRef = SetItemRef
 
 local buttons = {"UpButton", "DownButton", "BottomButton"}
 local dummy = function() end
-local ts = "|cffffffff|HoChat:%d:%d|h%s|h|||r %s"
-local buffer, bcount = {}, {}
+local ts = "|cffffffff|HoChat|h%s|h|||r %s"
 
 local blacklist = {
 	[ChatFrame2] = true,
@@ -69,17 +68,10 @@ end
 
 local AddMessage = function(self, text, ...)
 	if(type(text) == "string") then
-		local mid = bcount[self] + 1
-		local cid = self:GetID()
 		text = text:gsub("|Hplayer:([^:]+):(%d+)|h%[(.-)%]|h", "|Hplayer:%1:%2|h%3|h")
 		text = text:gsub("%[(%d+)%. (.+)%].+(|Hplayer.+)", channel)
 
-		-- 128 is the default max lines on the chat frames.
-		text = ts:format(cid, mid % 128, date"%H%M.%S", text)
-
-		-- TODO: Clean up this one:
-		buffer[cid * 1e3 + mid % 128] = text:gsub("|Hplayer:(.-):%d+|h.-|h", "%1")
-		bcount[self] = mid
+		text = ts:format(date"%H%M.%S", text)
 	end
 
 	return _AddMessage(self, text, ...)
@@ -115,7 +107,6 @@ for i=1, NUM_CHAT_WINDOWS do
 	end
 
 	if(not blacklist[cf]) then
-		bcount[cf] = 0
 		cf.AddMessage = AddMessage
 	end
 end
@@ -145,16 +136,51 @@ ChatTypeInfo['BATTLEGROUND'].sticky = 1
 ChatTypeInfo['WHISPER'].sticky = 1
 ChatTypeInfo['CHANNEL'].sticky = 1
 
-SetItemRef = function(link, text, button, ...)
-	if(link:sub(1, 5) ~= "oChat") then return _SetItemRef(link, text, button, ...) end
+-- Modified version of MouseIsOver from UIParent.lua
+local MouseIsOver = function(frame)
+	local s = frame:GetParent():GetEffectiveScale()
+	local x, y = GetCursorPosition()
+	x = x / s
+	y = y / s
 
-	local c, m = string_split(":", link:sub(7))
-	text = buffer[c * 1e3 + m % 128]
-	if(text) then
-		eb:SetText(text)
-		eb:Show()
-		eb:SetFocus()
+	local left = frame:GetLeft()
+	local right = frame:GetRight()
+	local top = frame:GetTop()
+	local bottom = frame:GetBottom()
+
+	-- Hack to fix a symptom not the real issue
+	if(not left) then
+		return
+	end
+
+	if((x > left and x < right) and (y > bottom and y < top)) then
+		return 1
+	else
+		return
 	end
 end
 
+local borderManipulation = function(...)
+	for l = 1, select("#", ...) do
+		local obj = select(l, ...)
+		if(obj:GetObjectType() == "FontString" and MouseIsOver(obj)) then
+			return obj:GetText()
+		end
+	end
+end
 
+SetItemRef = function(link, text, button, ...)
+	if(link:sub(1, 5) ~= "oChat") then return _SetItemRef(link, text, button, ...) end
+
+	local text = borderManipulation(SELECTED_CHAT_FRAME:GetRegions())
+
+	if(text) then
+		text = text:gsub("|c%x*(.-)|r", "%1")
+		text = text:gsub("|HoChat|h(.-)|h", "%1")
+		text = text:gsub("|Hplayer:.-|h(.-)|h", "%1")
+		eb:Insert(text)
+		eb:Show()
+		eb:HighlightText()
+		eb:SetFocus()
+	end
+end
