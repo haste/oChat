@@ -64,7 +64,7 @@ if(not wotlk) then
 else
 	_G.CHAT_GUILD_GET = '|Hchannel:Guild|hg|h %s:\32'
 	_G.CHAT_RAID_GET = "|Hchannel:raid|hr|h %s:\32"
-	_G.CHAT_MONSTER_PARTY_GET = "|Hchannel:Party|hp|h %s:\32"
+	_G.CHAT_PARTY_GET = "|Hchannel:Party|hp|h %s:\32"
 	_G.CHAT_RAID_WARNING_GET = "w %s:\32"
 	_G.CHAT_RAID_LEADER_GET = "|Hchannel:raid|hR|h %s:\32"
 	_G.CHAT_OFFICER_GET = "|Hchannel:o|ho|h %s:\32"
