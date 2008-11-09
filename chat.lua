@@ -28,8 +28,6 @@
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------]]
-local wotlk = select(4, GetBuildInfo()) >= 3e4
-
 --[[ This was once a really old version of idChat :D ]]
 
 local _G = getfenv(0)
@@ -49,35 +47,20 @@ local blacklist = {
 	[ChatFrame4] = true,
 }
 
-local str
-if(not wotlk) then
-	_G.CHAT_GUILD_GET = "g %s:\32"
-	_G.CHAT_RAID_GET = "r %s:\32"
-	_G.CHAT_PARTY_GET = "p %s:\32"
-	_G.CHAT_RAID_WARNING_GET = "w %s:\32"
-	_G.CHAT_RAID_LEADER_GET = "R %s:\32"
-	_G.CHAT_OFFICER_GET = "o %s:\32"
-	_G.CHAT_BATTLEGROUND_GET = "b %s:\32"
-	_G.CHAT_BATTLEGROUND_LEADER_GET = "B %s:\32"
-
-	str = "%d %3$s" -- gives: 1 Otravi: Hi
-else
-	_G.CHAT_GUILD_GET = '|Hchannel:Guild|hg|h %s:\32'
-	_G.CHAT_RAID_GET = "|Hchannel:raid|hr|h %s:\32"
-	_G.CHAT_PARTY_GET = "|Hchannel:Party|hp|h %s:\32"
-	_G.CHAT_RAID_WARNING_GET = "w %s:\32"
-	_G.CHAT_RAID_LEADER_GET = "|Hchannel:raid|hR|h %s:\32"
-	_G.CHAT_OFFICER_GET = "|Hchannel:o|ho|h %s:\32"
-	_G.CHAT_BATTLEGROUND_GET = "|Hchannel:Battleground|hb|h %s:\32"
-	_G.CHAT_BATTLEGROUND_LEADER_GET = "|Hchannel:Battleground|hB|h %s:\32"
-
-	str = "%d|h %3$s" -- gives: 1 Otravi: Hi
-end
+_G.CHAT_GUILD_GET = '|Hchannel:Guild|hg|h %s:\32'
+_G.CHAT_RAID_GET = "|Hchannel:raid|hr|h %s:\32"
+_G.CHAT_PARTY_GET = "|Hchannel:Party|hp|h %s:\32"
+_G.CHAT_RAID_WARNING_GET = "w %s:\32"
+_G.CHAT_RAID_LEADER_GET = "|Hchannel:raid|hR|h %s:\32"
+_G.CHAT_OFFICER_GET = "|Hchannel:o|ho|h %s:\32"
+_G.CHAT_BATTLEGROUND_GET = "|Hchannel:Battleground|hb|h %s:\32"
+_G.CHAT_BATTLEGROUND_LEADER_GET = "|Hchannel:Battleground|hB|h %s:\32"
 
 -- 1: index, 2: channelname, 3: twatt
 -- Examples are based on this: [1. Channel] Otravi: Hi
 --local str = "[%2$.3s] %s" -- gives: [Cha] Otravi: Hi
 --local str = "[%d. %2$.3s] %s" -- gives: [1. Cha] Otravi: Hi
+local str = "%d|h %3$s" -- gives: 1 Otravi: Hi
 local channel = function(...)
 	return str:format(...)
 end
