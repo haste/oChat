@@ -42,6 +42,8 @@ local buttons = {"UpButton", "DownButton", "BottomButton"}
 local dummy = function() end
 local ts = "|cffffffff|HoChat|h%s|h|||r %s"
 
+local origs = {}
+
 local blacklist = {
 	[ChatFrame2] = true,
 	[ChatFrame4] = true,
@@ -67,13 +69,12 @@ end
 
 local AddMessage = function(self, text, ...)
 	if(type(text) == "string") then
-		text = text:gsub("|Hplayer:([^:]+):(%d+)|h%[(.-)%]|h", "|Hplayer:%1:%2|h%3|h")
-		text = text:gsub("%[(%d+)%. (.+)%].+(|Hplayer.+)", channel)
+		text = text:gsub('|Hchannel:(%d+)|h%[?(.-)%]?|h.+(|Hplayer.+)', channel)
 
 		text = ts:format(date"%H%M.%S", text)
 	end
 
-	return _AddMessage(self, text, ...)
+	return origs[self](self, text, ...)
 end
 
 local scroll = function(self, dir)
@@ -106,6 +107,7 @@ for i=1, NUM_CHAT_WINDOWS do
 	end
 
 	if(not blacklist[cf]) then
+		origs[cf] = cf.AddMessage
 		cf.AddMessage = AddMessage
 	end
 end
