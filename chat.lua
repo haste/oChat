@@ -30,7 +30,6 @@
 ---------------------------------------------------------------------------]]
 --[[ This was once a really old version of idChat :D ]]
 
-local _G = getfenv(0)
 local type = type
 local tonumber = tonumber
 local string_split = string.split
@@ -49,15 +48,16 @@ local blacklist = {
 	[ChatFrame4] = true,
 }
 
-_G.CHAT_GUILD_GET = '|Hchannel:Guild|hg|h %s:\32'
-_G.CHAT_RAID_GET = "|Hchannel:raid|hr|h %s:\32"
-_G.CHAT_PARTY_GET = "|Hchannel:Party|hp|h %s:\32"
-_G.CHAT_PARTY_LEADER_GET = '|Hchannel:party|hP|h %s:\32'
-_G.CHAT_RAID_WARNING_GET = "w %s:\32"
-_G.CHAT_RAID_LEADER_GET = "|Hchannel:raid|hR|h %s:\32"
-_G.CHAT_OFFICER_GET = "|Hchannel:o|ho|h %s:\32"
-_G.CHAT_BATTLEGROUND_GET = "|Hchannel:Battleground|hb|h %s:\32"
-_G.CHAT_BATTLEGROUND_LEADER_GET = "|Hchannel:Battleground|hB|h %s:\32"
+CHAT_GUILD_GET = '|Hchannel:Guild|hg|h %s:\32'
+CHAT_RAID_GET = "|Hchannel:raid|hr|h %s:\32"
+CHAT_PARTY_GET = "|Hchannel:Party|hp|h %s:\32"
+CHAT_PARTY_LEADER_GET = '|Hchannel:party|hP|h %s:\32'
+CHAT_PARTY_GUIDE_GET =  CHAT_PARTY_LEADER_GET
+CHAT_RAID_WARNING_GET = "w %s:\32"
+CHAT_RAID_LEADER_GET = "|Hchannel:raid|hR|h %s:\32"
+CHAT_OFFICER_GET = "|Hchannel:o|ho|h %s:\32"
+CHAT_BATTLEGROUND_GET = "|Hchannel:Battleground|hb|h %s:\32"
+CHAT_BATTLEGROUND_LEADER_GET = "|Hchannel:Battleground|hB|h %s:\32"
 
 -- 1: index, 2: channelname, 3: twatt
 -- Examples are based on this: [1. Channel] Otravi: Hi
