@@ -5,3 +5,5 @@
 ## Notes: Straight forward chat add-on
 
 chat.lua
+copy.lua
+globals.lua
