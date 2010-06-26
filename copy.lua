@@ -1,3 +1,5 @@
+local _SetItemRef = SetItemRef
+
 local borderManipulation = function(...)
 	for l = 1, select("#", ...) do
 		local obj = select(l, ...)
