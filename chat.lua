@@ -14,13 +14,23 @@ local channel = function(...)
 	return str:format(...)
 end
 
-local ts = "|cffffffff|HoChat|h%s|h|||r %s"
 local type = type
+local math_floor = math.floor
+
+local ts = "|cffffffff|HoChat|h%s|h|||r %s"
 local origs = {}
 local AddMessage = function(self, text, ...)
 	if(type(text) == "string") then
+		local _, size = self:GetFont()
+		size = math_floor(size + .5)
+
+		-- Simplify channel display.
 		text = text:gsub('|Hchannel:(%d+)|h%[?(.-)%]?|h.+(|Hplayer.+)', channel)
 
+		-- Make the in-line textures match the font-size.
+		text = text:gsub('(|T[^:]+:)(%d+:*%d*)', ('%%1%d:%1$d'):format(size))
+
+		-- Timestamp in the start.
 		text = ts:format(date"%H%M.%S", text)
 	end
 
